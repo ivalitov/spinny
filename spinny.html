@@ -1,0 +1,89 @@
+<html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="script.js"></script>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+    }
+
+    .grid_2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+    }
+
+    #tools {
+        display: flex;
+        flex-direction: column;
+        padding-top: 10px;
+        
+    }
+
+    .label_right {
+        margin-left: auto;
+        margin-right: 5px;
+    }
+
+    .painting {
+        padding: 10px 0px 10px 0px;
+    }
+</style>
+
+<body>
+
+    <div id="application">
+
+        <div>
+            <div id="current_degree">0</div>
+        </div>
+
+
+        <div class="grid_2">
+            <button onclick="createDefaultCirle()">Drop</button>
+            <button id="save_btn"">Save</button>
+        </div>
+    
+        <div class="painting">
+            <canvas id="paint"></canvas>
+        </div>
+
+        <div id="metrics" class="grid_2">
+            <button onclick="rotratePainting()">Rotrate</button>
+            <button onclick="rotrateLoop()">Rotrate ON/OFF</button>
+            <b class="label_right">Speed (angle):</b>
+            <input type="number" id="degree">
+            <b class="label_right">Rate (ms):</b>
+            <input type="number" id="ms">
+            <b class="label_right">Color:</b>
+            <select id="select_color">
+                <option value="#000000" style="background-color: #000000;">black</option>
+                <option value="#0000ff" style="background-color: #0000ff;">blue</option>
+                <option value="#ff0000" style="background-color: #ff0000;">red</option>
+                <option value="#008000" style="background-color: #008000;">green</option>
+                <option value="#ffffff" style="background-color: #ffffff;">white</option>
+            </select>
+            <b class="label_right">Width:</b>
+            <select id="select_line_width">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>5</option>
+                <option>8</option>
+                <option>13</option>
+                <option>21</option>
+                <option>34</option>
+            </select>
+            <div id="tools">
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+</body>
+
+</html>
