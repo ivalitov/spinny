@@ -79,6 +79,50 @@ $(function () {
     letsdraw = false;
   });
 
+
+  theCanvas.addEventListener("touchstart", function (e) {
+    letsdraw = true;
+    ctx.strokeStyle = lineColor;
+    ctx.lineWidth = lineWidth;
+    ctx.beginPath();
+  });
+
+  theCanvas.addEventListener("touchmove", function (e) {
+
+    if (letsdraw === true) {
+
+      var rotrateDegree = degree;
+
+      var x_base_Weighted = e.changedTouches[0].clientX - canvasOffset.left;
+      var y_base_Weighted = e.changedTouches[0].clientY - canvasOffset.top;
+
+      // convert to relative coordinates
+      var x_Relative = x_base_Weighted - oX;
+      var y_Relative = oY - y_base_Weighted;
+
+      // rotrate relative
+      var x_Relative_Rotrated = x_Relative * Math.cos(rotrateDegree) - y_Relative * Math.sin(rotrateDegree);
+      var y_Relative_Rotrated = x_Relative * Math.sin(rotrateDegree) + y_Relative * Math.cos(rotrateDegree);
+
+      // convert to original coordinates
+      var xResult = x_Relative_Rotrated + oX;
+      var yResult = oY - y_Relative_Rotrated;
+
+      ctx.lineTo(xResult, yResult);
+      ctx.stroke();
+    }
+
+  });
+
+  theCanvas.addEventListener("touchend", function (e) {
+    letsdraw = false;
+  });
+
+  theCanvas.addEventListener("touchcancel", function (e) {
+    letsdraw = false;
+  });
+
+
   $ms.on('input', function (e) {
     stepMs = parseInt(e.target.value);
   })
