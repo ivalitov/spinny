@@ -4,15 +4,16 @@ var $degree;
 var $current_degree;
 var $ms;
 var degree = 0;
-var picWidth = 400;
-var picHeight = 400;
+var picWidth;
+var picHeight;
+var oX;
+var oY;
 var stepMs = 10;
-var oX = picWidth / 2;
-var oY = picHeight / 2;
 var isSpinning = false;
 var lineColor;
 var lineWidth;
 var ctx;
+var theCanvas;
 
 $(function () {
   $painting = $('#paint');
@@ -27,7 +28,14 @@ $(function () {
   $ms.val(stepMs);
   $degree.val(0.0174533);
 
-  var theCanvas = document.getElementById('paint');
+  var shorSide = window.innerWidth > window.innerHeight ? window.innerHeight / 1.5 :window.innerWidth;
+
+  picWidth = shorSide * 0.95;
+  picHeight = picWidth;
+  oX = picWidth / 2;
+  oY = picHeight / 2;
+
+  theCanvas = document.getElementById('paint');
   ctx = theCanvas.getContext('2d');
   theCanvas.width = picWidth;
   theCanvas.height = picHeight;
@@ -43,13 +51,21 @@ $(function () {
 
   var letsdraw = false;
 
-  $painting.mousemove(function (e) {
+    $painting.on('mousemove touchmove', function (e) {
     if (letsdraw === true) {
 
-      var rotrateDegree = degree;
+      var x_base_Weighted;
+      var y_base_Weighted;
 
-      var x_base_Weighted = e.pageX - canvasOffset.left;
-      var y_base_Weighted = e.pageY - canvasOffset.top;
+      if (e.type === 'mousemove') {
+        x_base_Weighted = e.pageX - canvasOffset.left;
+        y_base_Weighted = e.pageY - canvasOffset.top;
+      } else {
+        x_base_Weighted = e.originalEvent.changedTouches[0].pageX - canvasOffset.left;
+        y_base_Weighted = e.originalEvent.changedTouches[0].pageY - canvasOffset.top;
+      }
+
+      var rotrateDegree = degree;
 
       // convert to relative coordinates
       var x_Relative = x_base_Weighted - oX;
@@ -68,60 +84,16 @@ $(function () {
     }
   });
 
-  $painting.mousedown(function () {
+  $painting.on('mousedown touchstart', function (e) {
     letsdraw = true;
     ctx.strokeStyle = lineColor;
     ctx.lineWidth = lineWidth;
     ctx.beginPath();
   });
 
-  $(window).mouseup(function () {
+  $painting.on('mouseup touchend touchcancel', function (e) {
     letsdraw = false;
   });
-
-
-  theCanvas.addEventListener("touchstart", function (e) {
-    letsdraw = true;
-    ctx.strokeStyle = lineColor;
-    ctx.lineWidth = lineWidth;
-    ctx.beginPath();
-  });
-
-  theCanvas.addEventListener("touchmove", function (e) {
-
-    if (letsdraw === true) {
-
-      var rotrateDegree = degree;
-
-      var x_base_Weighted = e.changedTouches[0].clientX - canvasOffset.left;
-      var y_base_Weighted = e.changedTouches[0].clientY - canvasOffset.top;
-
-      // convert to relative coordinates
-      var x_Relative = x_base_Weighted - oX;
-      var y_Relative = oY - y_base_Weighted;
-
-      // rotrate relative
-      var x_Relative_Rotrated = x_Relative * Math.cos(rotrateDegree) - y_Relative * Math.sin(rotrateDegree);
-      var y_Relative_Rotrated = x_Relative * Math.sin(rotrateDegree) + y_Relative * Math.cos(rotrateDegree);
-
-      // convert to original coordinates
-      var xResult = x_Relative_Rotrated + oX;
-      var yResult = oY - y_Relative_Rotrated;
-
-      ctx.lineTo(xResult, yResult);
-      ctx.stroke();
-    }
-
-  });
-
-  theCanvas.addEventListener("touchend", function (e) {
-    letsdraw = false;
-  });
-
-  theCanvas.addEventListener("touchcancel", function (e) {
-    letsdraw = false;
-  });
-
 
   $ms.on('input', function (e) {
     stepMs = parseInt(e.target.value);
@@ -143,8 +115,31 @@ $(function () {
     link.delete;
   });
 
+  $('#size_up').click(function() {
+    changeCanvasSize(100);
+  });
+
+  $('#size_down').click(function() {
+    changeCanvasSize(-100);
+  });
+
 
 });
+
+ function changeCanvasSize(px) {
+  if (picWidth + px <= 0 || picHeight + px <= 0 ||
+    picWidth + px >= window.innerWidth || picHeight + px >= window.innerHeight / 1.5) {
+    return;
+  }
+  picWidth = picWidth + px;
+  picHeight = picHeight + px;
+  oX = picWidth / 2;
+  oY = picHeight / 2;
+  theCanvas.width = picWidth;
+  theCanvas.height = picHeight;
+  createDefaultCirle();
+  canvasOffset = $('#paint').offset();
+}
 
 function createDefaultCirle() {
   createCirle(ctx, picWidth / 2, "white");
