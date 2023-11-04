@@ -2,10 +2,15 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="script.js"></script>
+
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+</head>
 <style>
     body {
         display: flex;
         justify-content: center;
+        height: 100%;
         overflow: hidden;
     }
 
@@ -15,11 +20,18 @@
         gap: 5px;
     }
 
+    .grid_tools {
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        grid-template-rows: repeat(6, 1fr);
+        gap: 5px;
+    }
+
     #tools {
         display: flex;
         flex-direction: column;
         padding-top: 10px;
-        
+
     }
 
     .label_right {
@@ -30,65 +42,112 @@
     .painting {
         padding: 10px 0px 10px 0px;
     }
+
+    .toggle_3 {
+        height: 100%;
+        width: 30%;
+    }
+
+    .toggle_2 {
+        height: 100%;
+        width: 49%;
+    }
+
+    .toggle_input {
+        height: 100%;
+        width: 33%;
+    }
+
+    .toggle_row {
+        /* height: 40px; */
+    }
 </style>
 
 <body>
 
-    <div id="application">
+<div id="application">
 
-        <div>
-            <div id="current_degree">0</div>
-        </div>
+    <div>
+        <div id="current_degree">0</div>
+    </div>
+
+    <div class="grid_2" style="position: relative; z-index: 1;">
+        <button id="drop_btn">Drop</button>
+        <button id="save_btn">Save</button>
+    </div>
 
 
-        <div class="grid_2">
-            <button onclick="createDefaultCirle()">Drop</button>
-            <button id="save_btn"">Save</button>
-        </div>
-    
-        <div class="painting">
-            <canvas id="paint"></canvas>
-        </div>
 
-        <div id="metrics" class="grid_2">
-            <button onclick="rotratePainting()">Rotrate</button>
-            <button onclick="rotrateLoop()">Rotrate ON/OFF</button>
-            <b class="label_right">Speed (angle):</b>
-            <input type="number" id="degree">
-            <b class="label_right">Rate (ms):</b>
-            <input type="number" id="ms">
-            <b class="label_right">Color:</b>
-            <select id="select_color">
-                <option value="#000000" style="background-color: #000000;">black</option>
-                <option value="#0000ff" style="background-color: #0000ff;">blue</option>
-                <option value="#ff0000" style="background-color: #ff0000;">red</option>
-                <option value="#008000" style="background-color: #008000;">green</option>
-                <option value="#ffffff" style="background-color: #ffffff;">white</option>
-            </select>
-            <b class="label_right">Width:</b>
-            <select id="select_line_width">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>5</option>
-                <option>8</option>
-                <option>13</option>
-                <option>21</option>
-                <option>34</option>
-            </select>
-            <div></div>
-            <div>
-                <button id="size_up">🡅</button>
-                <button id="size_down">🡇</button>
-            </div>
-            <div id="tools">
+    <div id="metrics" class="grid_2" style="grid-template-rows: auto auto; position: relative;">
 
+        <div style="grid-column-start: 1; grid-column-end: 3; grid-row-start: 2; grid-row-end: 3; margin: auto;">
+            <div class=" painting">
+                <canvas id="paint"></canvas>
             </div>
         </div>
+    </div>
+
+    <div class="grid_tools">
+
+        <b class="label_right">Rotrate</b>
+        <!-- <button onclick="rotratePainting()">Rotrate</button> -->
+        <button id="rotrate_btn"
+                style="grid-column-start: 2; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2; position: relative; z-index: 1;">ON/OFF</button>
 
 
+        <b class="label_right">Speed (angle):</b>
+        <div class="toggle_row"
+             style="grid-column-start: 2; grid-column-end: 5; grid-row-start: 2; grid-row-end: 3;">
+            <input id="degree" class="toggle_input" type="number">
+            <button id="degree_increase_btn" class="toggle_3">+</button>
+            <button id="degree_decrease_btn" class="toggle_3">-</button>
+        </div>
+
+        <b class="label_right">Rate (ms):</b>
+        <div class="toggle_row"
+             style="grid-column-start: 2; grid-column-end: 5; grid-row-start: 3; grid-row-end: 4;">
+            <input id="rate" class="toggle_input" type="number">
+            <button id="rate_increase_btn" class="toggle_3">+</button>
+            <button id="rate_decrease_btn" class="toggle_3">-</button>
+        </div>
+
+
+        <b class="label_right">Color:</b>
+        <select id="select_color" class="toggle_row"
+                style="grid-column-start: 2; grid-column-end: 5; grid-row-start: 4; grid-row-end: 5;">
+            <option value="#000000" style="background-color: #000000;">black</option>
+            <option value="#0000ff" style="background-color: #0000ff;">blue</option>
+            <option value="#ff0000" style="background-color: #ff0000;">red</option>
+            <option value="#008000" style="background-color: #008000;">green</option>
+            <option value="#ffffff" style="background-color: #ffffff;">white</option>
+        </select>
+
+
+        <b class="label_right">Width:</b>
+        <select id="select_line_width" class="toggle_row"
+                style="grid-column-start: 2; grid-column-end: 5; grid-row-start: 5; grid-row-end: 6;">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>5</option>
+            <option>8</option>
+            <option>13</option>
+            <option>21</option>
+            <option>34</option>
+        </select>
+
+        <b class="label_right">Canvas Size:</b>
+        <div class="toggle_row"
+             style="grid-column-start: 2; grid-column-end: 5; grid-row-start: 6; grid-row-end: 7;">
+            <button id="size_up" class="toggle_2">+</button>
+            <button id="size_down" class="toggle_2">-</button>
+        </div>
 
     </div>
+
+    <div id="tools"></div>
+
+</div>
 
 </body>
 
